@@ -162,7 +162,8 @@ body.is-dark .brand svg{color:var(--areia)}
 .crm{margin-top:2.6rem;font-size:1rem;color:var(--bronze);letter-spacing:.04em}
 .portrait{position:relative;justify-self:center;width:min(100%,440px);aspect-ratio:3/4.3;margin-top:40px}
 .arch-fill{position:absolute;left:4%;right:4%;bottom:0;top:24%;border-radius:999px 999px 0 0;background:linear-gradient(180deg,var(--areia),color-mix(in srgb,var(--areia) 70%,var(--bronze)))}
-.arch-line{position:absolute;left:0;top:20%;width:100%;height:80%;overflow:visible}
+.arch-line{position:absolute;left:calc(4% - 14px);right:calc(4% - 14px);top:calc(24% - 14px);bottom:0;border:1.5px solid var(--bronze);border-bottom:0;border-radius:999px 999px 0 0;clip-path:inset(0 0 0 0)}
+.js:not(.reduce) .arch-line{clip-path:inset(100% 0 0 0)}
 .cut{position:absolute;left:4%;right:4%;bottom:0;top:0;clip-path:inset(-30% 0 0 0);display:flex;align-items:flex-end;justify-content:center}
 .cut img{height:100%;width:auto;max-width:none;filter:drop-shadow(0 30px 30px rgba(62,28,26,.12))}
 .floor{position:absolute;left:12%;right:12%;bottom:-16px;height:28px;border-radius:50%;background:radial-gradient(closest-side,rgba(62,28,26,.28),transparent);filter:blur(4px)}
@@ -410,9 +411,7 @@ body.is-dark .cursor{border-color:var(--areia)}
 
     <div class="portrait" aria-hidden="false">
       <div class="arch-fill"></div>
-      <svg class="arch-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path class="trace hero-arch" d="M2,100 L2,46 C2,10 98,10 98,46 L98,100"/>
-      </svg>
+      <div class="arch-line" aria-hidden="true"></div>
       <div class="cut">
         <img src="img/01-hero-809.webp" srcset="img/01-hero-700.webp 700w, img/01-hero-809.webp 809w" sizes="(max-width: 860px) 78vw, 34vw" width="809" height="1428" alt="Dra. Marília Rêgo sorrindo, de vestido branco, na clínica" fetchpriority="high">
       </div>
@@ -693,6 +692,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('[data-reveal]').forEach(function(e){e.style.opacity=1;e.style.transform='none'});
     document.querySelectorAll('.wi').forEach(function(e){e.style.transform='none'});
     document.querySelectorAll('#manifesto .w').forEach(function(e){e.style.opacity=1});
+    var al=document.querySelector('.arch-line');if(al)al.style.clipPath='none';
     return;
   }
 
@@ -725,14 +725,12 @@ document.addEventListener('DOMContentLoaded', function(){
         .from('.cut img',{yPercent:12,opacity:0,duration:D3},0)
         .from('.arch-fill',{scaleY:0,transformOrigin:'50% 100%',duration:D3},0)
         .from('.seal',{scale:.6,opacity:0,duration:D2},.5);
-  var archPath=document.querySelector('.hero-arch');
-  var archLen=archPath.getTotalLength();
-  gsap.set(archPath,{strokeDasharray:archLen,strokeDashoffset:archLen});
+  var archPath=document.querySelector('.arch-line');
 
   /* Abertura: o monograma se desenha, o nome aparece, a cortina sobe */
   function runIntro(){
     var layer=document.querySelector('.intro-layer');
-    if(!root.classList.contains('intro')){gsap.set(archPath,{strokeDashoffset:0});heroIn.play();return;}
+    if(!root.classList.contains('intro')){gsap.to(archPath,{clipPath:'inset(0% 0 0 0)',duration:D3});heroIn.play();return;}
     lenis.stop();
     var paths=layer.querySelectorAll('.dm');
     paths.forEach(function(p){var l=p.getTotalLength();gsap.set(p,{strokeDasharray:l,strokeDashoffset:l})});
@@ -741,7 +739,7 @@ document.addEventListener('DOMContentLoaded', function(){
     tl.to(paths,{strokeDashoffset:0,duration:.55,stagger:.28,ease:'power2.inOut'})
       .to(name.children,{opacity:1,duration:D1,stagger:.025},1.0)
       .to(layer,{clipPath:'inset(0 0 100% 0)',duration:D2,ease:'expo.inOut'},1.75)
-      .to(archPath,{strokeDashoffset:0,duration:D3,ease:'power2.inOut'},1.95)
+      .to(archPath,{clipPath:'inset(0% 0 0 0)',duration:D3,ease:'power2.inOut'},1.95)
       .add(function(){heroIn.play()},2.0);
   }
   if(document.fonts&&document.fonts.ready){Promise.race([document.fonts.ready,new Promise(function(r){setTimeout(r,800)})]).then(runIntro);}else runIntro();
