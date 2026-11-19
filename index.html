@@ -425,8 +425,7 @@ body.is-dark .cursor{border-color:var(--areia)}
           <circle class="disc" cx="60" cy="60" r="58"/>
           <g class="seal-rot" style="transform-origin:60px 60px">
             <path id="sealpath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" fill="none"/>
-            <text class="seal-fallback" style="letter-spacing:2.2px"><textPath href="#sealpath">MÉTODO MELHOR VERSÃO · CIÊNCIA E ESCUTA ·</textPath></text>
-            <g class="seal-chars" data-text="MÉTODO MELHOR VERSÃO · CIÊNCIA E ESCUTA · "></g>
+            <g class="seal-chars"><text x="60" y="19" text-anchor="middle" transform="rotate(4.79 60 60)">M</text><text x="60" y="19" text-anchor="middle" transform="rotate(14.36 60 60)">É</text><text x="60" y="19" text-anchor="middle" transform="rotate(23.94 60 60)">T</text><text x="60" y="19" text-anchor="middle" transform="rotate(33.51 60 60)">O</text><text x="60" y="19" text-anchor="middle" transform="rotate(43.09 60 60)">D</text><text x="60" y="19" text-anchor="middle" transform="rotate(52.66 60 60)">O</text><text x="60" y="19" text-anchor="middle" transform="rotate(67.50 60 60)">M</text><text x="60" y="19" text-anchor="middle" transform="rotate(77.07 60 60)">E</text><text x="60" y="19" text-anchor="middle" transform="rotate(86.65 60 60)">L</text><text x="60" y="19" text-anchor="middle" transform="rotate(96.22 60 60)">H</text><text x="60" y="19" text-anchor="middle" transform="rotate(105.80 60 60)">O</text><text x="60" y="19" text-anchor="middle" transform="rotate(115.37 60 60)">R</text><text x="60" y="19" text-anchor="middle" transform="rotate(130.21 60 60)">V</text><text x="60" y="19" text-anchor="middle" transform="rotate(139.79 60 60)">E</text><text x="60" y="19" text-anchor="middle" transform="rotate(149.36 60 60)">R</text><text x="60" y="19" text-anchor="middle" transform="rotate(158.94 60 60)">S</text><text x="60" y="19" text-anchor="middle" transform="rotate(168.51 60 60)">Ã</text><text x="60" y="19" text-anchor="middle" transform="rotate(178.09 60 60)">O</text><text x="60" y="19" text-anchor="middle" transform="rotate(191.01 60 60)">·</text><text x="60" y="19" text-anchor="middle" transform="rotate(203.94 60 60)">C</text><text x="60" y="19" text-anchor="middle" transform="rotate(213.51 60 60)">I</text><text x="60" y="19" text-anchor="middle" transform="rotate(223.09 60 60)">Ê</text><text x="60" y="19" text-anchor="middle" transform="rotate(232.66 60 60)">N</text><text x="60" y="19" text-anchor="middle" transform="rotate(242.23 60 60)">C</text><text x="60" y="19" text-anchor="middle" transform="rotate(251.81 60 60)">I</text><text x="60" y="19" text-anchor="middle" transform="rotate(261.38 60 60)">A</text><text x="60" y="19" text-anchor="middle" transform="rotate(276.22 60 60)">E</text><text x="60" y="19" text-anchor="middle" transform="rotate(291.06 60 60)">E</text><text x="60" y="19" text-anchor="middle" transform="rotate(300.64 60 60)">S</text><text x="60" y="19" text-anchor="middle" transform="rotate(310.21 60 60)">C</text><text x="60" y="19" text-anchor="middle" transform="rotate(319.79 60 60)">U</text><text x="60" y="19" text-anchor="middle" transform="rotate(329.36 60 60)">T</text><text x="60" y="19" text-anchor="middle" transform="rotate(338.94 60 60)">A</text><text x="60" y="19" text-anchor="middle" transform="rotate(351.86 60 60)">·</text></g>
           </g>
           <use href="#mono" x="44" y="45.5" width="32" height="29" style="color:var(--bronze)"/>
         </svg>
@@ -691,22 +690,6 @@ document.addEventListener('DOMContentLoaded', function(){
   })();
 
 
-  /* Selo: cada letra posicionada à mão, com espaçamento igual em toda a volta (não depende de textLength, que alguns navegadores ignoram) */
-  function buildSeal(){
-    var g=document.querySelector('.seal-chars');if(!g)return;
-    var svgNS='http://www.w3.org/2000/svg',txt=g.getAttribute('data-text'),R=44,C=2*Math.PI*R;
-    var probe=document.createElementNS(svgNS,'text');g.appendChild(probe);
-    var widths=txt.split('').map(function(ch){probe.textContent=ch===' '?'\u00a0':ch;return probe.getComputedTextLength()||4;});
-    g.removeChild(probe);
-    var total=widths.reduce(function(a,b){return a+b},0),gap=(C-total)/txt.length,pos=0;
-    txt.split('').forEach(function(ch,i){
-      var center=pos+widths[i]/2,ang=center/C*360;pos+=widths[i]+gap;
-      if(ch===' ')return;
-      var t=document.createElementNS(svgNS,'text');t.textContent=ch;t.setAttribute('x',60);t.setAttribute('y',60-R+3);t.setAttribute('text-anchor','middle');t.setAttribute('transform','rotate('+ang.toFixed(2)+' 60 60)');g.appendChild(t);
-    });
-    var fb=document.querySelector('.seal-fallback');if(fb)fb.remove();
-  }
-  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(buildSeal);
   function finishIntro(){clearTimeout(window.__introSafety);root.classList.remove('intro');root.classList.add('intro-done');}
 
   if(reduce||!hasGsap){
