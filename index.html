@@ -62,7 +62,7 @@
     if(reduce){d.classList.add('reduce');return;}
     d.classList.add('intro');
     // Tempo-limite de segurança: libera a página se o JavaScript principal falhar.
-    window.__introSafety=setTimeout(function(){d.classList.remove('intro');d.classList.add('intro-done');},3600);
+    window.__introSafety=setTimeout(function(){d.classList.remove('intro');d.classList.add('intro-done');},4200);
   })();
 </script>
 
@@ -358,16 +358,18 @@ body.is-dark .cursor{border-color:var(--areia)}
 <div class="intro-layer" aria-hidden="true">
   <svg class="intro-mono" viewBox="0 0 120 106">
     <defs>
+      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.1"/></filter>
       <mask id="draw" maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="126">
-        <g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#soft)">
           <path class="dm" pathLength="1" d="M23.7,72 L23.7,8.5 L56.1,40.5 L84,13 L84,48"/>
-          <path class="dm" pathLength="1" d="M37,46 C33,58 42,69 66,68"/>
-          <path class="dm" pathLength="1" d="M37,45.5 C52,44 60,52 65,66 C70,80 77,98 94,101"/>
           <path class="dm" pathLength="1" d="M76,7 C96,6 107.5,20 107.5,35 C107.5,52 93,63 71,63"/>
+          <path class="dm" pathLength="1" d="M66,68 C42,69 33,58 37,46"/>
+          <path class="dm" pathLength="1" d="M37,45.5 C52,44 60,52 65,66 C70,80 77,98 94,101"/>
         </g>
       </mask>
     </defs>
     <use href="#mono" mask="url(#draw)"/>
+    <use class="mono-full" href="#mono" opacity="0"/>
   </svg>
   <div class="intro-name">Dra. Marília Rêgo</div>
 </div>
@@ -736,13 +738,26 @@ document.addEventListener('DOMContentLoaded', function(){
     lenis.stop();
     var paths=layer.querySelectorAll('.dm');
     var name=layer.querySelector('.intro-name');var txt=name.textContent;name.innerHTML=txt.split('').map(function(c){return '<span>'+(c===' '?'&nbsp;':c)+'</span>'}).join('');name.style.opacity=1;
+    // Um único traço contínuo: cada parte dura proporcional ao próprio comprimento,
+    // e uma só curva de aceleração atravessa o desenho inteiro.
+    var lens=[].map.call(paths,function(p){return p.getTotalLength()});
+    var total=lens.reduce(function(a,b){return a+b},0), DRAW=1.55;
+    var draw=gsap.timeline({paused:true});
+    var at=0;
+    paths.forEach(function(p,i){
+      var d=lens[i]/total;
+      draw.set(p,{opacity:1},at).to(p,{strokeDashoffset:0,duration:d,ease:'none'},at);
+      at+=d;
+    });
+    gsap.set(layer.querySelector('.intro-mono'),{opacity:0,y:8});
     var tl=gsap.timeline({onComplete:function(){finishIntro();lenis.start();}});
-    tl.to(paths,{opacity:1,duration:.01,stagger:.28},0)
-      .to(paths,{strokeDashoffset:0,duration:.55,stagger:.28,ease:'power2.inOut'},0)
-      .to(name.children,{opacity:1,duration:D1,stagger:.025},1.0)
-      .to(layer,{clipPath:'inset(0 0 100% 0)',duration:D2,ease:'expo.inOut'},1.75)
-      .to(archPath,{clipPath:'inset(0% 0 0 0)',duration:D3,ease:'power2.inOut'},1.95)
-      .add(function(){heroIn.play()},2.0);
+    tl.to(layer.querySelector('.intro-mono'),{opacity:1,y:0,duration:D2,ease:EASE},0)
+      .to(draw,{progress:1,duration:DRAW,ease:'sine.inOut'},0.05)
+      .to(layer.querySelector('.mono-full'),{opacity:1,duration:.35,ease:'sine.out'},DRAW-.1)
+      .to(name.children,{opacity:1,duration:D2,stagger:.03,ease:'sine.out'},1.15)
+      .to(layer,{clipPath:'inset(0 0 100% 0)',duration:D3,ease:'expo.inOut'},1.75)
+      .to(archPath,{clipPath:'inset(0% 0 0 0)',duration:D3,ease:'power2.inOut'},2.1)
+      .add(function(){heroIn.play()},2.15);
   }
   if(document.fonts&&document.fonts.ready){Promise.race([document.fonts.ready,new Promise(function(r){setTimeout(r,800)})]).then(runIntro);}else runIntro();
 
