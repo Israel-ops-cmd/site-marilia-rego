@@ -152,6 +152,8 @@ body.is-dark .brand svg{color:var(--areia)}
 .intro-mono{width:min(150px,36vw);height:auto;color:var(--bronze);overflow:visible}
 .intro-name{font-size:.86rem;letter-spacing:.42em;text-transform:uppercase;color:var(--bronze);padding-left:.42em;white-space:nowrap}
 .intro-name span{display:inline-block;opacity:0}
+.intro .intro-name{opacity:0}
+.intro .dm{stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
 
 /* Hero */
 .hero{position:relative;min-height:100svh;padding:120px 0 70px;display:flex;align-items:center}
@@ -358,10 +360,10 @@ body.is-dark .cursor{border-color:var(--areia)}
     <defs>
       <mask id="draw" maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="126">
         <g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-          <path class="dm" d="M23.7,72 L23.7,8.5 L56.1,40.5 L84,13 L84,48"/>
-          <path class="dm" d="M37,46 C33,58 42,69 66,68"/>
-          <path class="dm" d="M37,45.5 C52,44 60,52 65,66 C70,80 77,98 94,101"/>
-          <path class="dm" d="M76,7 C96,6 107.5,20 107.5,35 C107.5,52 93,63 71,63"/>
+          <path class="dm" pathLength="1" d="M23.7,72 L23.7,8.5 L56.1,40.5 L84,13 L84,48"/>
+          <path class="dm" pathLength="1" d="M37,46 C33,58 42,69 66,68"/>
+          <path class="dm" pathLength="1" d="M37,45.5 C52,44 60,52 65,66 C70,80 77,98 94,101"/>
+          <path class="dm" pathLength="1" d="M76,7 C96,6 107.5,20 107.5,35 C107.5,52 93,63 71,63"/>
         </g>
       </mask>
     </defs>
@@ -733,10 +735,10 @@ document.addEventListener('DOMContentLoaded', function(){
     if(!root.classList.contains('intro')){gsap.to(archPath,{clipPath:'inset(0% 0 0 0)',duration:D3});heroIn.play();return;}
     lenis.stop();
     var paths=layer.querySelectorAll('.dm');
-    paths.forEach(function(p){var l=p.getTotalLength();gsap.set(p,{strokeDasharray:l,strokeDashoffset:l})});
-    var name=layer.querySelector('.intro-name');var txt=name.textContent;name.innerHTML=txt.split('').map(function(c){return '<span>'+(c===' '?'&nbsp;':c)+'</span>'}).join('');
+    var name=layer.querySelector('.intro-name');var txt=name.textContent;name.innerHTML=txt.split('').map(function(c){return '<span>'+(c===' '?'&nbsp;':c)+'</span>'}).join('');name.style.opacity=1;
     var tl=gsap.timeline({onComplete:function(){finishIntro();lenis.start();}});
-    tl.to(paths,{strokeDashoffset:0,duration:.55,stagger:.28,ease:'power2.inOut'})
+    tl.to(paths,{opacity:1,duration:.01,stagger:.28},0)
+      .to(paths,{strokeDashoffset:0,duration:.55,stagger:.28,ease:'power2.inOut'},0)
       .to(name.children,{opacity:1,duration:D1,stagger:.025},1.0)
       .to(layer,{clipPath:'inset(0 0 100% 0)',duration:D2,ease:'expo.inOut'},1.75)
       .to(archPath,{clipPath:'inset(0% 0 0 0)',duration:D3,ease:'power2.inOut'},1.95)
