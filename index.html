@@ -171,7 +171,7 @@ body.is-dark .brand svg{color:var(--areia)}
 .floor{position:absolute;left:12%;right:12%;bottom:-16px;height:28px;border-radius:50%;background:radial-gradient(closest-side,rgba(62,28,26,.28),transparent);filter:blur(4px)}
 .seal{position:absolute;right:-6%;bottom:12%;width:clamp(104px,10vw,138px);aspect-ratio:1;z-index:3;color:var(--vinho)}
 .seal svg{width:100%;height:100%;overflow:visible}
-.seal text{font-family:var(--sans);font-size:8.4px;letter-spacing:.22em;text-transform:uppercase;fill:currentColor}
+.seal text{font-family:var(--sans);font-size:8.4px;font-weight:400;fill:currentColor;text-rendering:geometricPrecision}
 .seal .disc{fill:var(--off)}
 
 /* Seções */
@@ -425,9 +425,9 @@ body.is-dark .cursor{border-color:var(--areia)}
           <circle class="disc" cx="60" cy="60" r="58"/>
           <g class="seal-rot" style="transform-origin:60px 60px">
             <path id="sealpath" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" fill="none"/>
-            <text><textPath href="#sealpath">Método Melhor Versão · Ciência e escuta ·</textPath></text>
+            <text textLength="276.4" lengthAdjust="spacing"><textPath href="#sealpath" textLength="276.4" lengthAdjust="spacing">MÉTODO MELHOR VERSÃO · CIÊNCIA E ESCUTA · </textPath></text>
           </g>
-          <use href="#mono" x="44" y="45" width="32" height="29" style="color:var(--bronze)"/>
+          <use href="#mono" x="44" y="45.5" width="32" height="29" style="color:var(--bronze)"/>
         </svg>
       </div>
     </div>
